@@ -30,12 +30,12 @@ app.get("/", (req, res) => {
 app.post("/api/movies", async (req, res) => {
   try {
     if (Object.keys(req.body).length === 0) {
-      return res.status(400).send({ error: "No movie data" });
+      return res.status(400).json({ error: "No movie data" });
     }
     const data = await db.addNewMovie(req.body);
-    res.status(201).send(data);
+    res.status(201).json(data);
   } catch (error) {
-    res.status(400).send({ error: error.message });
+    res.status(400).json({ error: error.message });
   }
 });
 
@@ -49,10 +49,9 @@ app.get("/api/movies", async (req, res) => {
     if (data.length === 0) {
       return res.status(204).send();
     }
-
-    res.send(data);
+    res.json(data);
   } catch (error) {
-    res.status(400).send({ error: error.message });
+    res.status(400).json({ error: error.message });
   }
 });
 
@@ -60,23 +59,23 @@ app.get("/api/movies/:_id", async (req, res) => {
   try {
     const data = await db.getMovieById(req.params._id);
     if (!data) {
-      return res.status(400).send("Movie not found.");
+      return res.status(400).json({ error: "Movie not found." });
     }
     res.send(data);
   } catch (error) {
-    res.status(400).send({ error: error.message });
+    res.status(400).json({ error: error.message });
   }
 });
 
 app.put("/api/movie/:_id", async (req, res) => {
   try {
     if (Object.keys(req.body).length === 0) {
-      return res.status(400).send("No data provided to update.");
+      return res.status(400).json({ error: "No data provided to update." });
     }
     const data = await db.updateMovieById(req.body, req.params._id);
-    res.send("Movie updated!");
+    res.json({ success: "Movie updated!" });
   } catch (error) {
-    res.status(400).send({ error: error.message });
+    res.status(400).json({ error: error.message });
   }
 });
 
@@ -84,9 +83,9 @@ app.delete("/api/movies/:_id", async (req, res) => {
   try {
     const movie = await db.getMovieById(req.params._id);
     await db.deleteMovieById(req.params._id);
-    res.send(`Movie: "${movie.title}" deleted!`);
+    res.json({ success: `Movie - ${movie.title} deleted!` });
   } catch (error) {
-    res.status(400).send({ error: error.message });
+    res.status(400).json({ error: error.message });
   }
 });
 
