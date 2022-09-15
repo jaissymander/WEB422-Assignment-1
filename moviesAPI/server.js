@@ -58,6 +58,9 @@ app.get("/api/movies", async (req, res) => {
 app.get("/api/movies/:_id", async (req, res) => {
   try {
     const data = await db.getMovieById(req.params._id);
+    if (!data) {
+      return res.status(204).send();
+    }
     res.send(data);
   } catch (error) {
     res.status(400).send({ error: error.message });
