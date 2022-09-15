@@ -49,6 +49,7 @@ app.get("/api/movies", async (req, res) => {
     if (data.length === 0) {
       return res.status(204).send();
     }
+
     res.send(data);
   } catch (error) {
     res.status(400).send({ error: error.message });
@@ -59,7 +60,7 @@ app.get("/api/movies/:_id", async (req, res) => {
   try {
     const data = await db.getMovieById(req.params._id);
     if (!data) {
-      return res.status(204).send();
+      return res.status(400).send("Movie not found.");
     }
     res.send(data);
   } catch (error) {
