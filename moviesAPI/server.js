@@ -5,7 +5,7 @@
  * (including web sites) or distributed to other students.
  *
  * Name: Jaskirat Singh Student ID: 145562203 Date: Sept. 15, 2022
- * Cyclic Link: _______________________________________________________________
+ * Cyclic Link: https://defiant-kilt-newt.cyclic.app
  *
  ********************************************************************************/
 
@@ -22,6 +22,10 @@ require("dotenv").config();
 
 app.use(cors());
 app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send("WEB422 Assignment-1 (Web-API)");
+});
 
 app.post("/api/movies", async (req, res) => {
   try {
@@ -62,7 +66,10 @@ app.get("/api/movies/:_id", async (req, res) => {
 
 app.put("/api/movie/:_id", async (req, res) => {
   try {
-    await db.updateMovieById(req.body, req.params._id);
+    if (Object.keys(req.body).length === 0) {
+      return res.status(400).send("No data provided to update.");
+    }
+    const data = await db.updateMovieById(req.body, req.params._id);
     res.send("Movie updated!");
   } catch (error) {
     res.status(400).send({ error: error.message });
@@ -71,8 +78,9 @@ app.put("/api/movie/:_id", async (req, res) => {
 
 app.delete("/api/movies/:_id", async (req, res) => {
   try {
+    const movie = await db.getMovieById(req.params._id);
     await db.deleteMovieById(req.params._id);
-    res.send("Movie deleted!");
+    res.send(`Movie: "${movie.title}" deleted!`);
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
