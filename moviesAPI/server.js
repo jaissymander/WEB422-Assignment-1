@@ -89,6 +89,10 @@ app.delete("/api/movies/:_id", async (req, res) => {
   }
 });
 
+app.get("*", (req, res) => {
+  res.json({ error: "End point not supported." });
+});
+
 db.initialize(process.env.MONGODB_CONN_STRING)
   .then(() => {
     app.listen(HTTP_PORT, () => {
