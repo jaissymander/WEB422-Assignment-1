@@ -49,7 +49,6 @@ app.get("/api/movies", async (req, res) => {
     if (data.length === 0) {
       return res.status(400).json([]);
     }
-    res.json(data);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
